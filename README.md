@@ -84,20 +84,36 @@ Gate C 的全部非实况（non-live）准备工作已完成，全程没有调�
 当前唯一的硬门禁是具名人类签署。相关请求位于 [SEED-CHARTER-SIGNOFF-REQUEST.json](docs/gates/gate-c/SEED-CHARTER-SIGNOFF-REQUEST.json)。
 ```
 
-### 指标
+### 指标（分层可理解性度量）
 
-| 指标 | 改进前 | 改进后 | 变化 |
-|---|---:|---:|---|
-| 英文词密度（个/百字） | 31.5 | 16.1 | **-49%** |
-| 列表条目含谓语（完整句） | 4/13 | 12/13 | **+62 个百分点** |
-| 中文正文量（汉字数） | 130 | 230 | +77%（解释补齐，非注水：事实条目数不变） |
-| 事实保留（数字/条件/标识符） | — | 全部 | 100% |
+全部指标由 [metrics/measure.py](metrics/measure.py) 确定性计算，样本随仓库提供
+（[改进前](metrics/samples/codex-gate-c.before.md) / [改进后](metrics/samples/codex-gate-c.after.md)），可复现：
 
-平均句长从 7 字升到 13 字，原因同前：电报式碎片（“M3 五专家 exact prompt + egress manifest”）被拼回有主语、有谓语的完整句。改进前的问题不是句子太长，而是根本不成句。
+| 层 | 指标 | 改进前 | 改进后 | 变化 |
+|---|---|---:|---:|---|
+| A 术语可及性 | 未解释行话密度（个/百字） | 11.5 | 1.7 | **-85%** |
+| A 术语可及性 | 行话首现释义率 | 12% | 76% | +64 个百分点 |
+| B 句法完整性 | 列表条目成句率（句末标点判定） | 0/13 | 13/13 | **+100 个百分点** |
+| B 句法完整性 | 平均句长（汉字） | 7 | 14 | 碎片拼回完整句（见下） |
+| C 信息完整性 | 事实原子保留率（数字/标识符/文件/条件逐项核对） | — | **100%** | 原子清单可人工复查 |
+| D 残留缩写 | 项目内缩写未展开数 | 3（M3/M6/V5） | 3（同） | 语言层天花板，见下 |
 
-术语被驯化而不是消灭：`egress manifest` → 「出站清单（egress manifest）」，代码标识符（`reasoning_content`、`node --check`、文件名）原样保留。
+**为什么平均句长变长是改进**：改进前的问题不是句子长，而是不成句——
+`M3 五专家 exact prompt + egress manifest` 没有主语和谓语，读者必须自己脑补整句话。
+成句率从 0/13 到 13/13 度量的正是这个。
 
-生成方式：改进后文本由 **deepseek-v4-pro** 于 2026-08-16 经 DeepSeek Harness headless 运行产出（`pnpm dsh --profile headless`，技能经 `~/.agents/skills` 加载），非人工改写。
+**D 层是诚实的天花板**：M3、V5 这类项目内部代号在两版中都未展开——它们的意义不在
+语言层，在项目上下文层。这正是 [explain-to-me](https://github.com/JamieJustTang/explain-to-me)
+的价值：把整个会话导入 DeepSeek，用上下文（而不是措辞）补齐这一层。
+
+**事实可得性测验（[metrics/comprehension.py](metrics/comprehension.py)）**：8 道事实题
+（5/5 通过多少项、哪个字段被删除、还差什么签署……），deepseek-v4-pro 仅凭文本作答——
+两版均 **8/8**。这个“无差异”本身就是发现：模型读者自动翻越术语墙，事实提取从来不是
+它的瓶颈；可理解性成本是人类读者专属的，所以上表 A/B/D 结构层才是人类侧的正确度量，
+而 8/8 保证改写没有为可读性牺牲机器可提取性。
+
+生成方式：改进后文本由 **deepseek-v4-pro** 于 2026-08-16 经 DeepSeek Harness headless
+运行产出（`pnpm dsh --profile headless`，技能经 `~/.agents/skills` 加载），非人工改写。
 
 ## 与 explain-to-me 的关系
 
