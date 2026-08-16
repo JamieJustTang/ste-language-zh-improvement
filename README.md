@@ -1,8 +1,8 @@
-# ste-language-improvement
+# ste-language-zh-improvement
 
 把面向人的文字（文档、PR 描述、错误信息、智能体输出）写成平实、自然、没有「AI 味」的中文或英文。
 
-英文侧遵循 ASD-STE100 Simplified Technical English（Issue 9）；中文侧是本地魔改的补充规则——把翻译腔、互联网黑话、欧化句式改回自然的中文。这是 [explain-to-me](https://github.com/JamieJustTang/explain-everything-to-me-dsh) 的推荐搭档：它负责把 Claude/Codex 的会话搬进 DeepSeek，本技能负责让 DeepSeek 说人话。
+英文侧遵循 ASD-STE100 Simplified Technical English（Issue 9）；中文侧是本地魔改的补充规则——把翻译腔、互联网黑话、欧化句式改回自然的中文。本技能通用，任何具备技能机制的 agent 都能用。推荐搭档：[explain-everything-to-me-dsh](https://github.com/JamieJustTang/explain-everything-to-me-dsh)——把 Claude/Codex 会话导入 DeepSeek 的插件，与本技能配合得到“导入 + 说人话”的完整体验。
 
 ## 它解决什么
 
@@ -20,10 +20,10 @@
 
 ```sh
 git clone https://github.com/JamieJustTang/ste-language-zh-improvement.git \
-  ~/.agents/skills/ste-language-improvement
+  ~/.agents/skills/ste-language-zh-improvement
 ```
 
-放入 agent 的技能目录（如 `~/.agents/skills/`）即被具备技能机制的 agent（DeepSeek Harness、ZCode 等）自动发现。
+放入你所用 agent 的技能目录（如 `~/.agents/skills/`）即被自动发现。
 
 ## 效果实测
 
@@ -68,13 +68,12 @@ git clone https://github.com/JamieJustTang/ste-language-zh-improvement.git \
 它的瓶颈；可理解性成本是人类读者专属的，所以上表 A/B/D 结构层才是人类侧的正确度量，
 而 8/8 保证改写没有为可读性牺牲机器可提取性。
 
-生成方式：两组“改进后”文本均由 **deepseek-v4-pro** 于 2026-08-16 经 DeepSeek Harness
-headless 运行产出（`pnpm dsh --profile headless`，技能经 `~/.agents/skills` 加载），
-非人工改写。
+生成方式：两组“改进后”文本均由 **deepseek-v4-pro** 于 2026-08-16 生成（temperature 0），
+非人工改写；原文取自真实 Codex 会话，标识已匿名化。
 
-## 与 explain-everything-to-me-dsh 的关系
+## 推荐搭档
 
-[explain-to-me](https://github.com/JamieJustTang/explain-everything-to-me-dsh) 把 Claude/Codex 会话导入 DeepSeek Harness；本技能让导入后的解释、以及 DeepSeek 自己的输出保持平实中文。推荐同时安装 [decision-one-by-one](https://github.com/JamieJustTang/decision-one-by-one)——它负责“逐项解释并敲定待决策项”的对话流程。
+推荐搭档：[explain-everything-to-me-dsh](https://github.com/JamieJustTang/explain-everything-to-me-dsh) 把 Claude/Codex 会话导入 DeepSeek，本技能让导入后的解释、以及模型自己的输出保持平实中文。另一个推荐搭档：[decision-one-by-one](https://github.com/JamieJustTang/decision-one-by-one)——它负责“逐项解释并敲定待决策项”的对话流程。
 
 ## 声明
 
