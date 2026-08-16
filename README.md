@@ -57,44 +57,47 @@ git clone https://github.com/JamieJustTang/ste-language-improvement.git \
 [SEED-CHARTER-SIGNOFF-REQUEST.json](…)
 ```
 
-### 改进后（ste-language-improvement 重写）
+### 改进后（deepseek-v4-pro 实际输出）
 
 ```markdown
-Gate C 的离线准备工作全部完成，没有调用 DeepSeek。
+Gate C 的全部非实况（non-live）准备工作已完成，全程没有调用 DeepSeek。
 
-本轮交付了八项：
+交付包括：
 
-- 五位专家评审的提示词定稿，以及对外发送清单（egress manifest）。
-- 主稿评审和正、反两个校准集的提示词定稿，各带一份发送清单。
-- 评审材料的两阶段生成机制：先出草稿，再由裁判（adjudicator）定稿。
-- 提示词包（prompt bundle）执行器。包一经生成，不再改动。
-- 媒介传播领域的评审专家已加入金丝雀小组（canary panel）。
-- 评分轴阈值的校准结果。
-- 来源包（source packet）的使用台账。
-- `reasoning_content` 字段在写入持久存储前递归删除；删除路径有记录，并配了回归测试。
+- 已交付 M3 五名专家的精确提示词（exact prompt）与出站清单（egress manifest）。
+- 已交付 M6 主稿及正反校准用的精确提示词与清单（manifest）。
+- 已建立 M3 裁决器（adjudicator）的两阶段物化（materialization）机制。
+- 已交付不可变提示词包（immutable prompt bundle）执行器。
+- V5 的媒介传播专家已进入金丝雀评审组（canary panel）。
+- 已交付轴阈值校准结果。
+- 已交付源数据包用量台账（source-packet usage ledger）。
+- 在持久化前递归删除 `reasoning_content`，记录脱敏（redaction）路径，并补齐回归测试。
 
-验证结果如下：
+验证结果：
 
-- 内核测试全部通过。
-- 录制回放（recorded-live）集成测试 5 项通过 5 项。
-- 隐私与脱敏（privacy/redaction）测试通过。
-- 新增和修改的脚本都通过了 `node --check`。
-- 全程没有联网，没有正式导出，没有注册新种子。
+- Kernel 完整测试全部通过。
+- recorded-live 集成测试结果为 5/5。
+- 提供方（provider）的隐私与脱敏测试通过。
+- 新增及修改脚本的 `node --check` 检查通过。
+- 全程无网络访问、无正式导出、无新种子注册。
 
-现在只剩一道硬性门禁：由具名的人类签字。签字请求在 `SEED-CHARTER-SIGNOFF-REQUEST.json`。
+当前唯一的硬门禁是具名人类签署。相关请求位于 [SEED-CHARTER-SIGNOFF-REQUEST.json](docs/gates/gate-c/SEED-CHARTER-SIGNOFF-REQUEST.json)。
 ```
 
 ### 指标
 
 | 指标 | 改进前 | 改进后 | 变化 |
 |---|---:|---:|---|
-| 英文词密度（个/百字） | 27.7 | 7.7 | **-72%** |
-| 列表条目为完整句（有谓语） | 2/13 | 13/13 | **+85 个百分点** |
+| 英文词密度（个/百字） | 31.5 | 16.1 | **-49%** |
+| 列表条目含谓语（完整句） | 4/13 | 12/13 | **+62 个百分点** |
+| 中文正文量（汉字数） | 130 | 230 | +77%（解释补齐，非注水：事实条目数不变） |
 | 事实保留（数字/条件/标识符） | — | 全部 | 100% |
 
-平均句长从 11 字升到 16 字——这是修复的一部分：电报式碎片（"M3 五专家 exact prompt + egress manifest"）被拼回有主语、有谓语的完整句。改进前的问题不是句子太长，而是根本不成句。
+平均句长从 7 字升到 13 字，原因同前：电报式碎片（“M3 五专家 exact prompt + egress manifest”）被拼回有主语、有谓语的完整句。改进前的问题不是句子太长，而是根本不成句。
 
-术语没有被消灭，而是被驯化：`egress manifest` 变成「对外发送清单（egress manifest）」，首次出现给中文，代码标识符（`reasoning_content`、`node --check`、文件名）原样保留。
+术语被驯化而不是消灭：`egress manifest` → 「出站清单（egress manifest）」，代码标识符（`reasoning_content`、`node --check`、文件名）原样保留。
+
+生成方式：改进后文本由 **deepseek-v4-pro** 于 2026-08-16 经 DeepSeek Harness headless 运行产出（`pnpm dsh --profile headless`，技能经 `~/.agents/skills` 加载），非人工改写。
 
 ## 与 explain-to-me 的关系
 
