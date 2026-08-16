@@ -41,35 +41,6 @@ git clone https://github.com/JamieJustTang/ste-language-zh-improvement.git \
 
 差异是结构性的，数字为辅：平均句长 32 → 27 字；超过 40 字的长句占比 25% → 12%；分节标题 1 → 3。真正的差别在解耦——左侧把 15 条决策、3 份调研、审查意见纠缠在同一段流里，每次阅读都要自己拆；右侧先回答「做了什么」（4 个动作），再按报告逐份讲「发现了什么」，最后收拢成「你现在只需做一个选择」。
 
-### 同义改写基准（分层指标）
-
-上面这组是「解读」而非逐句改写，不适用事实保留率；分层可理解性指标在下面两组
-「同义改写」样本上计算（经 deepseek-v4-pro 逐条重写，2026-08-16，temperature 0，
-样本见 [metrics/samples/](metrics/samples/)）：
-
-| 层 | 指标 | 案例 1 前→后 | 案例 2 前→后 |
-|---|---|---|---|
-| A 术语可及性 | 未解释行话密度（个/百字） | 11.5 → **1.7**（-85%） | 10.5 → **1.9**（-82%） |
-| A 术语可及性 | 行话首现释义率 | 12% → **76%** | 0% → **75%** |
-| B 句法完整性 | 列表条目成句率（句末标点判定） | 0/13 → **13/13** | 8/8 → 10/10 |
-| C 信息完整性 | 事实原子保留率（逐项核对） | — | **100% / 100%** |
-| D 残留缩写 | 项目内代号未展开数 | 3 → 3 | 5 → 5 |
-
-**为什么平均句长变长是改进**：改进前的问题不是句子长，而是不成句——
-`M3 五专家 exact prompt + egress manifest` 没有主语和谓语，读者必须自己脑补整句话。
-
-**D 层是诚实的天花板**：M3、V5、S16–S18 这类项目内部代号在改写前后都未展开——它们的
-意义不在语言层，在项目上下文层。这正是
-[explain-everything-to-me-dsh](https://github.com/JamieJustTang/explain-everything-to-me-dsh)
-的价值：把整个会话导入，用上下文补齐这一层。
-
-**事实可得性测验（[metrics/comprehension.py](metrics/comprehension.py)）**：8 道事实题，
-deepseek-v4-pro 仅凭文本作答——改写前后均 **8/8**。这个「无差异」本身就是发现：模型读者
-自动翻越术语墙，可理解性成本是人类读者专属的，所以 A/B/D 结构层才是人类侧的正确度量，
-而 8/8 保证改写没有为可读性牺牲机器可提取性。
-
-全部指标由 [metrics/measure.py](metrics/measure.py) 确定性计算，可复现。
-
 ## 推荐搭档
 
 推荐搭档：[explain-everything-to-me-dsh](https://github.com/JamieJustTang/explain-everything-to-me-dsh) 把 Claude/Codex 会话导入 DeepSeek，本技能让导入后的解释、以及模型自己的输出保持平实中文。另一个推荐搭档：[decision-one-by-one](https://github.com/JamieJustTang/decision-one-by-one)——它负责“逐项解释并敲定待决策项”的对话流程。
